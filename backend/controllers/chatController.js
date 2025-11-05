@@ -1,0 +1,167 @@
+import Message from '../models/Message.js';
+import User from '../models/User.js';
+
+// Get conversation between two users
+export const getConversation = async (req, res) => {
+  try {
+    const { userId, otherUserId } = req.params;
+    const { limit = 50, page = 1 } = req.query;
+
+    const messages = await Message.find({
+      $or: [
+        { senderId: userId, receiverId: otherUserId },
+        { senderId: otherUserId, receiverId: userId }
+      ]
+    })
+    .sort({ createdAt: -1 })
+    .limit(parseInt(limit))
+    .populate('senderId', 'name email profilePicture headline')
+    .populate('receiverId', 'name email profilePicture headline');
+
+    // Reverse to show oldest first
+    const sortedMessages = messages.reverse();
+
+    res.json({
+      success: true,
+      data: {
+        messages: sortedMessages,
+        total: messages.length
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching conversation:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch conversation'
+    });
+  }
+};
+
+// Send a message
+export const sendMessage = async (req, res) => {
+  try {
+    const { senderId, receiverId, content } = req.body;
+
+    if (!senderId || !receiverId || !content) {
+      return res.status(400).json({
+        success: false,
+        message: 'Sender ID, receiver ID, and content are required'
+      });
+    }
+
+    const message = new Message({
+      senderId,
+      receiverId,
+      content: content.trim()
+    });
+
+    await message.save();
+
+    // Populate the message with user details
+    const populatedMessage = await Message.findById(message._id)
+      .populate('senderId', 'name email profilePicture headline')
+      .populate('receiverId', 'name email profilePicture headline');
+
+    res.json({
+      success: true,
+      data: {
+        message: populatedMessage
+      }
+    });
+  } catch (error) {
+    console.error('Error sending message:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to send message'
+    });
+  }
+};
+
+// Mark messages as read
+export const markMessagesAsRead = async (req, res) => {
+  try {
+    const { userId, otherUserId } = req.body;
+
+    await Message.updateMany(
+      {
+        senderId: otherUserId,
+        receiverId: userId,
+        isRead: false
+      },
+      {
+        $set: {
+          isRead: true,
+          readAt: new Date()
+        }
+      }
+    );
+
+    res.json({
+      success: true,
+      message: 'Messages marked as read'
+    });
+  } catch (error) {
+    console.error('Error marking messages as read:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to mark messages as read'
+    });
+  }
+};
+
+// Get unread message count
+export const getUnreadCount = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const unreadCount = await Message.countDocuments({
+      receiverId: userId,
+      isRead: false
+    });
+
+    res.json({
+      success: true,
+      data: {
+        unreadCount
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching unread count:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch unread count'
+    });
+  }
+};
+
+// Get all users for chat
+export const getChatUsers = async (req, res) => {
+  try {
+    const users = await User.find({})
+      .select('name email profilePicture headline')
+      .sort({ name: 1 });
+
+    // Transform users to match frontend expectations
+    const transformedUsers = users.map(user => ({
+      userId: user._id,
+      name: user.name,
+      email: user.email,
+      profilePicture: user.profilePicture,
+      headline: user.headline,
+      role: 'user'
+    }));
+
+    res.json({
+      success: true,
+      data: {
+        users: transformedUsers
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching chat users:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch users'
+    });
+  }
+};

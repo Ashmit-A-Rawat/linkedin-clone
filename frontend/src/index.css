@@ -1,0 +1,14 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+body {
+  font-family: 'Inter', -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  background-color: #f3f2ef;
+  color: rgba(0, 0, 0, 0.9);
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  min-height: 100vh;
+}
