@@ -189,8 +189,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Ashmit Rawat**
 
-- GitHub: [@ashmitrawat44](https://github.com/ashmitrawat44)
-- Email: ashmitsinghrawat44@gmail.com
+- Email: ashmitrawat44@gmail.com
 
 ---
 
