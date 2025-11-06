@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
 import PostCard from '../components/PostCard';
 import CreatePost from '../components/CreatePost';
+const backendUrl = import.meta.env.BACKEND_URL || (import.meta.env.PROD ? "" : "http://localhost:5001");
+
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
@@ -15,7 +17,7 @@ const Feed = () => {
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get('http://localhost:5001/api/posts');
+      const response = await axios.get('${backendUrl}api/posts');
       setPosts(response.data);
     } catch (error) {
       console.error('Error fetching posts:', error);

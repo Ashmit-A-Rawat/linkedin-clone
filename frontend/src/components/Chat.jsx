@@ -12,13 +12,14 @@ import {
   ArrowLeft
 } from 'lucide-react';
 import axios from 'axios';
+const backendUrl = import.meta.env.BACKEND_URL || (import.meta.env.PROD ? "" : "http://localhost:5001");
 
 const Chat = () => {
   const navigate = useNavigate();
   const { socket, onlineUsers, isConnected } = useSocket();
   const { user } = useAuth();
   
-  const API_URL = 'http://localhost:5001/api';
+  const API_URL = backendUrl + 'api' ;
   
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);

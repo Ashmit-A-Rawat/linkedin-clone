@@ -23,7 +23,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   // Get API URL from environment or default
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+  const API_URL = import.meta.env.BACKEND_URL || 'http://localhost:5001';
 
   useEffect(() => {
     fetchPosts();

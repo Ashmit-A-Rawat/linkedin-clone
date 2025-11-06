@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { ThumbsUp, MessageCircle, Repeat2, Send, MoreHorizontal, Globe, Trash2, Edit2, X } from 'lucide-react';
+const backendUrl = import.meta.env.BACKEND_URL || (import.meta.env.PROD ? "" : "http://localhost:5001");
+
 
 const PostCard = ({ post, currentUser, onUpdate, onDelete }) => {
   const [showComments, setShowComments] = useState(false);
@@ -18,7 +20,7 @@ const PostCard = ({ post, currentUser, onUpdate, onDelete }) => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.put(
-        `http://localhost:5001/api/posts/${post._id}/like`,
+        `${backendUrl}api/posts/${post._id}/like`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` }
@@ -38,7 +40,7 @@ const PostCard = ({ post, currentUser, onUpdate, onDelete }) => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        `http://localhost:5001/api/posts/${post._id}/comment`,
+        `${backendUrl}api/posts/${post._id}/comment`,
         { text: commentText.trim() },
         {
           headers: { Authorization: `Bearer ${token}` }
@@ -60,7 +62,7 @@ const PostCard = ({ post, currentUser, onUpdate, onDelete }) => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.put(
-        `http://localhost:5001/api/posts/${post._id}`,
+        `${backendUrl}api/posts/${post._id}`,
         { content: editContent.trim() },
         {
           headers: { Authorization: `Bearer ${token}` }
@@ -79,7 +81,7 @@ const PostCard = ({ post, currentUser, onUpdate, onDelete }) => {
     if (window.confirm('Are you sure you want to delete this post?')) {
       try {
         const token = localStorage.getItem('token');
-        await axios.delete(`http://localhost:5001/api/posts/${post._id}`, {
+        await axios.delete(`${backendUrl}api/posts/${post._id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         onDelete(post._id);

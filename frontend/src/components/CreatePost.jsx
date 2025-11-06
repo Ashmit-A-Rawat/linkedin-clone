@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
 import { Image, Video, Calendar, FileText, X, Smile } from 'lucide-react';
+const backendUrl = import.meta.env.BACKEND_URL || (import.meta.env.PROD ? "" : "http://localhost:5001");
 
 const CreatePost = ({ onPostCreated }) => {
   const [content, setContent] = useState('');
@@ -61,7 +62,7 @@ const CreatePost = ({ onPostCreated }) => {
       console.log('📤 Sending post data:', postData);
 
       const response = await axios.post(
-        'http://localhost:5001/api/posts',
+        `${backendUrl}api/posts`,
         postData,
         {
           headers: {

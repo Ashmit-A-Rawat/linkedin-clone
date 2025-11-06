@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { io } from 'socket.io-client';
+const backendUrl = import.meta.env.BACKEND_URL || (import.meta.env.PROD ? "" : "http://localhost:5001");
 
 const SocketContext = createContext();
 
@@ -20,7 +21,7 @@ export const SocketProvider = ({ children }) => {
     console.log('🔌 Initializing Socket.io connection...');
     
     // Create socket connection
-    const newSocket = io('http://localhost:5001', {
+    const newSocket = io(`${backendUrl}`, {
       transports: ['websocket', 'polling'],
       timeout: 10000,
       reconnection: true,

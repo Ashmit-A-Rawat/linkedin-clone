@@ -14,6 +14,8 @@ import {
   Trash2,
   Camera
 } from 'lucide-react';
+const backendUrl = import.meta.env.BACKEND_URL || (import.meta.env.PROD ? "" : "http://localhost:5001");
+
 
 const Profile = () => {
   const { user, updateUser } = useAuth();
@@ -118,7 +120,7 @@ const Profile = () => {
       const token = localStorage.getItem('token');
       
       const response = await axios.put(
-        'http://localhost:5001/api/users/profile',
+        '${backendUrl}api/users/profile',
         profileData,
         {
           headers: {
