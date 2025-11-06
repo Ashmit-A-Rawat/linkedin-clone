@@ -10,6 +10,10 @@ A full-stack LinkedIn clone built with the MERN stack, featuring real-time messa
 
 This is a fully functional LinkedIn clone that replicates core features of the professional social networking platform. Built with modern technologies and best practices for scalable full-stack development.
 
+Deployed links:
+Frontend: https://linkedin-clone-rust-three.vercel.app/
+Backend: https://linkedin-clone-nijg.onrender.com/
+
 ---
 
 ## ✨ Features Implemented
