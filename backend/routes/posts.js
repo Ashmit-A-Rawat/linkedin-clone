@@ -4,7 +4,8 @@ import {
   getPosts,
   likePost,
   addComment,
-  deletePost
+  deletePost,
+  updatePost   // ✅ add this import
 } from '../controllers/postController.js';
 import { protect } from '../middleware/auth.js';
 
@@ -14,8 +15,11 @@ router.route('/')
   .post(protect, createPost)
   .get(getPosts);
 
+router.route('/:id')
+  .put(protect, updatePost)     // ✅ Add update route
+  .delete(protect, deletePost); // existing
+
 router.route('/:id/like').put(protect, likePost);
 router.route('/:id/comment').post(protect, addComment);
-router.route('/:id').delete(protect, deletePost);
 
 export default router;
